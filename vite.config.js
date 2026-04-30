@@ -2,7 +2,20 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: "codesandbox-health-endpoint",
+      configureServer(server) {
+        server.middlewares.use("/health", (_req, res) => {
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/json");
+          res.setHeader("Cache-Control", "no-store");
+          res.end(JSON.stringify({ ok: true, service: "vite", port: 5173 }));
+        });
+      },
+    },
+  ],
   esbuild: {
     loader: "jsx",
     include: /src\/.*\.js$/,
@@ -16,18 +29,12 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,
+    host: "0.0.0.0",
     port: 5173,
-    allowedHosts: ["rkq9lw-5173.csb.app"],
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:3001",
-        changeOrigin: true,
-      },
-      "/health": {
-        target: "http://127.0.0.1:3001",
-        changeOrigin: true,
-      },
+    strictPort: true,
+    allowedHosts: [".csb.app", "localhost", "127.0.0.1"],
+    headers: {
+      "x-csb-no-sw-proxy": "1",
     },
   },
   build: {

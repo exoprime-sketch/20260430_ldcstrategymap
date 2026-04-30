@@ -3750,12 +3750,7 @@ async function fetchJsonWithTimeout(url, timeoutMs = 12000, options = {}) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const contentType = (res.headers.get("content-type") || "").toLowerCase();
-    if (
-      contentType &&
-      !contentType.includes("json") &&
-      !contentType.includes("javascript") &&
-      !contentType.includes("text/plain")
-    ) {
+    if (!contentType.includes("json")) {
       throw new Error(`예상치 못한 응답 형식: ${contentType}`);
     }
 
@@ -3768,6 +3763,14 @@ async function fetchJsonWithTimeout(url, timeoutMs = 12000, options = {}) {
     }
 
     const text = await res.text();
+    const trimmed = text.trimStart();
+    if (
+      trimmed.startsWith("<!DOCTYPE") ||
+      trimmed.startsWith("<!doctype") ||
+      trimmed.startsWith("<html")
+    ) {
+      throw new Error(`HTML 응답이 반환되었습니다: ${safeUrl}`);
+    }
     const byteLength = new TextEncoder().encode(text).length;
     if (byteLength > MAX_JSON_RESPONSE_BYTES) {
       throw new Error("응답 크기가 허용 범위를 초과했습니다.");
@@ -27441,9 +27444,28 @@ function mergeCtisDataset(base, incoming, strategy = "merge") {
 async function fetchCtisPublicDataset(path) {
   if (typeof fetch !== "function") return null;
   try {
-    const res = await fetch(path, { cache: "no-store" });
+    const res = await fetch(path, {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
     if (!res.ok) return null;
-    const json = await res.json();
+
+    const contentType = (res.headers.get("content-type") || "").toLowerCase();
+    const text = await res.text();
+    const trimmed = text.trimStart();
+
+    // In CodeSandbox/Vite, a missing JSON path may be served as index.html.
+    // Do not try to JSON.parse an HTML fallback response.
+    if (trimmed.startsWith("<!DOCTYPE") || trimmed.startsWith("<html")) {
+      console.warn("CTIS bootstrap path returned HTML instead of JSON:", path);
+      return null;
+    }
+    if (!contentType.includes("json")) {
+      console.warn("CTIS bootstrap path returned unexpected content-type:", path, contentType);
+      return null;
+    }
+
+    const json = JSON.parse(text);
     const { normalized, errors } = validateCtisDataset(json);
     if (errors.length) {
       console.warn("CTIS bootstrap dataset validation warnings:", errors);

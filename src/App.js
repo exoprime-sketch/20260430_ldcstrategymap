@@ -867,6 +867,7 @@ function ensureExternalUrl(rawUrl) {
   return isAllowedExternalUrl(href, UI_ALLOWED_EXTERNAL_HOSTS) ? href : "";
 }
 
+/** World Bank 국가 페이지 슬러그 반환 → data.worldbank.org/country/{slug} */
 function getWorldBankCountrySlug(country) {
   const map = {
     베트남: "viet-nam",
@@ -885,6 +886,7 @@ function getWorldBankCountrySlug(country) {
   return map[String(country || "").trim()] || "";
 }
 
+/** GCF 국가 페이지 슬러그 반환 → greenclimate.fund/countries/{slug} */
 function getGcfCountrySlug(country) {
   const map = {
     베트남: "viet-nam",
@@ -903,6 +905,7 @@ function getGcfCountrySlug(country) {
   return map[String(country || "").trim()] || "";
 }
 
+/** ND-GAIN 국가 기후 취약성 페이지 슬러그 반환 → gain-new.crc.nd.edu/country/{slug} */
 function getNdGainCountrySlug(country) {
   const map = {
     베트남: "vietnam",
@@ -921,6 +924,7 @@ function getNdGainCountrySlug(country) {
   return map[String(country || "").trim()] || "";
 }
 
+/** World Bank 공개 데이터 국가 페이지 URL → data.worldbank.org/country/{slug} */
 function getWorldBankOpenDataUrl(country) {
   const officialLink = pickOfficialCountryLink(country, "country", 0);
   if (officialLink) return officialLink;
@@ -931,6 +935,7 @@ function getWorldBankOpenDataUrl(country) {
     : "https://data.worldbank.org/country";
 }
 
+/** World Bank 특정 지표 국가별 URL → data.worldbank.org/indicator/{code}?locations={iso2} */
 function getWorldBankIndicatorUrl(country, indicatorCode) {
   const iso2 = getCountryMetaByName(country)?.iso2 || "";
   const safeCode = String(indicatorCode || "").trim();
@@ -941,6 +946,7 @@ function getWorldBankIndicatorUrl(country, indicatorCode) {
     : "";
 }
 
+/** GCF 국가 프로젝트 목록 페이지 URL → greenclimate.fund/countries/{slug} */
 function getGcfCountryUrl(country) {
   const officialLink = pickOfficialCountryLink(country, "projects", 0);
   if (officialLink) return officialLink;
@@ -951,6 +957,7 @@ function getGcfCountryUrl(country) {
     : "https://www.greenclimate.fund/countries";
 }
 
+/** ND-GAIN 국가 기후 취약성 지수 페이지 URL → gain-new.crc.nd.edu/country/{slug} */
 function getNdGainCountryUrl(country) {
   const slug = getNdGainCountrySlug(country);
   return slug
@@ -1003,6 +1010,7 @@ function pickOfficialCountryLink(countryOrIso, category, index = 0) {
   return items[index]?.url || "";
 }
 
+/** 데이터 소스 항목(source명 기반)을 WB/GCF/UNFCCC/ADB 등 공식 페이지 URL로 변환 */
 function buildSourceEndpointUrl(item, country) {
   const source = String(item?.source || "").toLowerCase();
   const endpoint = String(item?.endpoint || "").trim();
@@ -1071,6 +1079,7 @@ function buildSourceEndpointUrl(item, country) {
   return guessSourceHref(item?.source, item?.endpoint, { country });
 }
 
+/** 소스명·엔드포인트·컨텍스트로부터 근거 링크 URL을 추론 (확정 URL이 없을 때 fallback) */
 function guessSourceHref(source, endpoint = "", context = {}) {
   const s = String(source || "").toLowerCase();
   const country = context?.country || "";

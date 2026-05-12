@@ -57,6 +57,9 @@ import {
   Sprout,
   Map as MapIcon, // ✅ 변경
 } from "lucide-react";
+// NOTE: JSON 누락 시 빌드 차단 방지를 위해 프로젝트 루트에
+//       { "version": "placeholder", "countries": {} } 형태의 placeholder 를 두십시오.
+//       사용처는 옵셔널 체이닝으로 보호되어 빈 객체여도 무중단.
 import OFFICIAL_LINK_WHITELIST from "../official_link_whitelist_asean.json";
 
 const VIETNAM_MEKONG_PILOT_DATA = {
@@ -3577,7 +3580,7 @@ const API_CATALOG = [
 ];
 
 function inferSubTech(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const key = `${safeRec.country}|${rec.region}|${safeRec.tech}`;
   const override = {
@@ -3597,7 +3600,7 @@ function inferSubTech(rec) {
 }
 
 function buildCooperationProfile(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const map = {
     "탄소 포집 및 저장 (CCUS)": {
@@ -3712,7 +3715,7 @@ function getCountryMetaByName(name) {
 }
 
 function getRegionQuery(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const key = `${safeRec.country}|${rec.region}`;
   const alias = REGION_QUERY_ALIAS[key] || rec.region;
@@ -4033,7 +4036,7 @@ function normalizeNominatimRegionFeature(regionHits, rec) {
 }
 
 function getStaticBoundaryBundle(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const regionCenter = [
     Number(rec?.lon ?? rec?.regionCenter?.[0]),
@@ -5336,7 +5339,7 @@ const RECOMMENDATIONS = [
 ];
 
 function buildStrategyEvidence(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
 
   const techSourceMap = {
@@ -5870,7 +5873,7 @@ function getPartnerDirectory(rec) {
 }
 
 function buildExecutionFeasibility(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const actualPartners = getPartnerDirectory(rec);
 
@@ -5912,7 +5915,7 @@ function buildExecutionFeasibility(rec) {
 }
 
 function buildLocalPartners(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const actualPartners = getPartnerDirectory(rec);
 
@@ -6437,7 +6440,7 @@ const COUNTRY_DATA_ENRICHMENTS = {
           source: "Fiji Climate Change Portal",
           mode: "공식 포털",
           link: "https://fijiclimatechangeportal.gov.fj/about-ccd/about-adaptation/",
-          description: "NAP 및 적응 부문 핵심 정책 문서 공식 열람 페이지", // '바로 확인할 수 있습니다' 개조식 변경
+          description: "NAP 및 적응 부문 핵심 정책 문서 공식 열람 페이지", // '확인 가능' 개조식 변경
           lastUpdated: "2025 기준 포털 확인",
           sampleFields: ["documentHub", "country", "link"],
           rows: [
@@ -9198,7 +9201,7 @@ function buildGenericPriorityRegion(rec, mergedPipeline = []) {
 }
 
 function buildVietnamSpecificStrategy(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const hotspotRows = extractSourceRows(rec, "vn-flood-hotspots");
   const observationRows = extractSourceRows(rec, "vn-observation-network");
@@ -9430,7 +9433,7 @@ function buildVietnamSpecificStrategy(rec, pipelineData = null) {
 }
 
 function buildStrategySynthesis(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   if (!rec) return null;
   const isVietnamWarning =
@@ -9585,7 +9588,7 @@ function buildStrategySynthesis(rec, pipelineData = null) {
 }
 
 function downloadStrategyJson(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const strategy = buildStrategySynthesis(rec, pipelineData);
   if (!strategy) return;
@@ -9774,7 +9777,7 @@ const LAUNCH_EXTERNAL_LINKS = [
 ].map((item) => ({ ...item, href: ensureExternalUrl(item.href) }));
 
 function buildRecordSpecificDocumentLinks(rec) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const rows = [];
 
   const pushRow = ({
@@ -9878,7 +9881,7 @@ function buildRecordSpecificDocumentLinks(rec) {
 }
 
 function buildCountryDocumentShelf(rec) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const countryLabel = safeRec.country || "국가";
   const purposeTags = safeArray(safeRec.purposeTags);
   const assessment = buildInternationalCooperationAssessment(safeRec);
@@ -9941,7 +9944,7 @@ function buildCountryDocumentShelf(rec) {
 }
 
 function buildPracticalUseScenarios(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const sourceCount =
     safeArray(safeRec.sourcePlan).length + safeArray(safeRec.regionRows).length;
   const partnerCount = (
@@ -10196,7 +10199,7 @@ function AlternativeCandidatesCard({ rec, filteredRecs = [], onSelectRec }) {
 }
 
 function buildSubmissionReadinessPack(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const assessment = buildInternationalCooperationAssessment(
     safeRec,
     pipelineData
@@ -10326,7 +10329,7 @@ function buildSubmissionReadinessPack(rec, pipelineData = null) {
 }
 
 function buildFieldMeetingPack(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const partners = safeArray(safeRec.localPartners).length
     ? safeArray(safeRec.localPartners)
     : getPartnerDirectory(safeRec);
@@ -10774,7 +10777,7 @@ function singlePointFC(lon, lat, props = {}) {
 }
 
 function cooperationLineFC(rec) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const countryCenter = getRecommendationCountryCenterCoords(rec);
   const pointCoords = getRecommendationPointCoords(rec);
@@ -12429,7 +12432,7 @@ function ScoreMethodCard({ compact = false }) {
 }
 
 function PracticalMetricCard({ rec, pipelineData = null }) {
-  const safeRec = sanitize검토Record(rec) || rec || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || rec || EMPTY_DETAIL_RECORD;
   const metrics = buildPracticalMetrics(safeRec, pipelineData);
   return (
     <SectionCard
@@ -12630,7 +12633,7 @@ function DataFreshnessCard({ rec, liveData = null, pipelineData = null }) {
 }
 
 function buildCoverageChecklist(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) || rec || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || rec || EMPTY_DETAIL_RECORD;
   const metrics = buildEvidenceMetrics(safeRec, pipelineData);
   const assessment = buildInternationalCooperationAssessment(
     safeRec,
@@ -12677,7 +12680,7 @@ function buildCoverageChecklist(rec, pipelineData = null) {
 }
 
 function EvidenceCoverageSummaryCard({ rec, pipelineData = null }) {
-  const safeRec = sanitize검토Record(rec) || rec || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || rec || EMPTY_DETAIL_RECORD;
   const checklist = buildCoverageChecklist(safeRec, pipelineData);
   const readyCount = checklist.filter((item) => item.status === "충족").length;
   return (
@@ -13964,7 +13967,7 @@ function ShortlistPanel({
   );
 }
 
-function 검토TabGuideCard({
+function ReviewTabGuideCard({
   rec,
   detailTab,
   strategyMeta,
@@ -14036,7 +14039,7 @@ function 검토TabGuideCard({
 }
 
 function CooperationFocusCard({ rec }) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   if (!rec) return null;
   const profile = rec.cooperationProfile || buildCooperationProfile(rec);
@@ -14315,7 +14318,7 @@ function buildCountrySignalBands(
   pipelineData = null,
   liveData = null
 ) {
-  const safeRec = sanitize검토Record(rec) || rec || { scores: {} };
+  const safeRec = sanitizeReviewRecord(rec) || rec || { scores: {} };
   const scores = safeRec?.scores || {};
   const pipelineCount = safeArray(pipelineData?.projects).length;
   const liveMetricCount = [
@@ -14715,7 +14718,7 @@ function buildSourceIntegrityRows(
   geoData = null,
   pipelineData = null
 ) {
-  const safeRec = sanitize검토Record(rec) || rec || {};
+  const safeRec = sanitizeReviewRecord(rec) || rec || {};
   const directEvidenceCount = collectEvidenceLinks(safeRec, "general").length;
   const sourcePlanCount = safeArray(safeRec?.sourcePlan).length;
   const partnerCount = safeArray(safeRec?.localPartners).length;
@@ -14822,7 +14825,7 @@ function buildDecisionEvidenceRows(
   geoData = null,
   pipelineData = null
 ) {
-  const safeRec = sanitize검토Record(rec) || rec || {};
+  const safeRec = sanitizeReviewRecord(rec) || rec || {};
   const evidenceLinks = collectEvidenceLinks(safeRec, "general");
   const inventoryRows = safeArray(safeRec?.inventoryRows);
   const missingRows = inventoryRows.filter((item) =>
@@ -15883,7 +15886,7 @@ function DesktopCollapsedRail({ side = "left", title, icon, onExpand }) {
 }
 
 function buildCandidateActivationReasons(rec, strategyMeta = {}) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const reasons = [];
   if (safeRec?.pilotStatus) reasons.push("베트남 대표 데이터");
   if (Number(safeRec?.scores?.coverage || 0) >= 85)
@@ -16103,7 +16106,7 @@ function ResumeWorkspaceCard({
   );
 }
 
-function Desktop탐색Panel({
+function DesktopBrowsePanel({
   leftPanelTab,
   setLeftPanelTab,
   filters,
@@ -17157,7 +17160,7 @@ function CandidateList({
   recommendations,
   activeRec,
   onSelectRec,
-  onOpen검토 = null,
+  onOpenReview = null,
   isMobile = false,
   guidePulse,
   strategyMetaByRec = {},
@@ -17196,7 +17199,7 @@ function CandidateList({
           )}
         >
           {recommendations.map((rec, idx) => {
-            const safeRec = sanitize검토Record(rec) ||
+            const safeRec = sanitizeReviewRecord(rec) ||
               rec || { country: "", region: "", tech: "" };
             const isActive = activeRec && rec.id === activeRec.id;
             const meta = strategyMetaByRec?.[rec.id] || {};
@@ -17224,7 +17227,7 @@ function CandidateList({
                   type="button"
                   onClick={() => {
                     onSelectRec(rec);
-                    if (isMobile) onOpen검토?.();
+                    if (isMobile) onOpenReview?.();
                   }}
                   className="w-full text-left"
                 >
@@ -17326,7 +17329,7 @@ function CandidateList({
                     type="button"
                     onClick={() => {
                       onSelectRec(rec);
-                      safeInvoke(onOpen검토);
+                      safeInvoke(onOpenReview);
                     }}
                     className={cx(
                       "rounded-lg border px-2.5 py-1.5 text-[11px] font-semibold",
@@ -17387,7 +17390,7 @@ function FundingExecutionPanel({
   onRefreshGeoData,
   onRefreshPipelineData,
 }) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const schemaRows = safeArray(rec?.schema);
   return (
@@ -18084,7 +18087,7 @@ function LocalPartnersCard({ partners = [] }) {
   );
 }
 
-function sanitize검토Record(rec) {
+function sanitizeReviewRecord(rec) {
   if (!rec) return null;
   return {
     ...rec,
@@ -18171,7 +18174,7 @@ function classifyEvidenceLinkQuality(href = "") {
 }
 
 function buildEvidenceMetrics(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || {
       country: "",
       region: "",
@@ -18295,7 +18298,7 @@ function buildEvidenceMetrics(rec, pipelineData = null) {
 }
 
 function buildPracticalMetrics(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) || rec || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || rec || EMPTY_DETAIL_RECORD;
   const assessment = buildInternationalCooperationAssessment(
     safeRec,
     pipelineData
@@ -18413,7 +18416,7 @@ function buildMetricDefinitionRows(rec, pipelineData = null) {
 }
 
 function buildInternationalCooperationAssessment(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const sourcePlan = safeArray(safeRec.sourcePlan);
   const regionRows = safeArray(safeRec.regionRows);
@@ -18709,7 +18712,7 @@ function scoreStatusLabel(score) {
 }
 
 function buildInternationalFrameworkRows(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const assessment = buildInternationalCooperationAssessment(
     safeRec,
     pipelineData
@@ -18836,7 +18839,7 @@ function buildInternationalFrameworkRows(rec, pipelineData = null) {
 }
 
 function buildCooperationActionPlan(rec, pipelineData = null) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const assessment = buildInternationalCooperationAssessment(
     safeRec,
     pipelineData
@@ -19168,7 +19171,7 @@ function buildInternationalCooperationBriefText(
   pipelineData = null,
   filters = null
 ) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   if (!safeRec?.country) return "";
   const assessment = buildInternationalCooperationAssessment(
     safeRec,
@@ -19343,7 +19346,7 @@ function createComparisonPdfPayload(
   geoData = null,
   pipelineData = null
 ) {
-  const safeRec = sanitize검토Record(rec) || rec || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || rec || EMPTY_DETAIL_RECORD;
   const stamp = new Date().toISOString().slice(0, 10);
   const generatedAtLabel = formatDateTimeKo(Date.now());
   const comparisonPool = uniqBy(
@@ -19608,7 +19611,7 @@ function createInternationalCooperationBriefPayload(
   pipelineData = null,
   filters = null
 ) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const text = buildInternationalCooperationBriefText(
     safeRec,
     pipelineData,
@@ -19856,7 +19859,7 @@ function buildEmergencyDownloadText(
   filters = null,
   pipelineData = null
 ) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const links = collectEvidenceLinks(safeRec, "general").slice(0, 8);
   const practicalMetrics = buildPracticalMetrics(safeRec, pipelineData);
   const lines = [
@@ -19910,7 +19913,7 @@ function createEmergencyDownloadPayload(
   pipelineData = null
 ) {
   try {
-    const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+    const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
     const stamp = new Date().toISOString().slice(0, 10);
     const links = collectEvidenceLinks(safeRec, "general").slice(0, 8);
     const pipelineRows = getMergedPipelineProjects(safeRec, pipelineData)
@@ -20266,7 +20269,7 @@ const EMPTY_STRATEGY_SYNTHESIS = Object.freeze({
   }),
 });
 
-class 검토TabErrorBoundary extends React.Component {
+class ReviewTabErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, message: "" };
@@ -20332,7 +20335,7 @@ function CandidateDecisionWorkspaceCard({
     [rec, pipelineData]
   );
   const nextCandidate = useMemo(() => {
-    const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+    const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
     return (
       safeArray(filteredRecs).find((item) => item && item.id !== safeRec.id) ||
       null
@@ -20473,7 +20476,7 @@ function OperationalQuickStartCard({
     [rec, pipelineData]
   );
   const nextCandidate = useMemo(() => {
-    const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+    const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
     return safeArray(filteredRecs).find(
       (item) => item && item.id !== safeRec.id
     );
@@ -20594,7 +20597,7 @@ function ReviewActionSummaryCard({
   onDownloadBrief = null,
   onOpenSources = null,
 }) {
-  const safeRec = sanitize검토Record(rec) || EMPTY_DETAIL_RECORD;
+  const safeRec = sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD;
   const evidenceMetrics = buildEvidenceMetrics(safeRec, pipelineData);
   const latestYear = getLatestEvidenceYear(safeRec) || "확인 필요";
   const nextAction =
@@ -20687,10 +20690,10 @@ function ReviewActionSummaryCard({
   );
 }
 
-function 검토PanelContent({
+function ReviewPanelContent({
   rec,
   detailTab,
-  set검토Tab,
+  setReviewTab,
   onCountryFocus,
   onRegionFocus,
   onDownloadExcel,
@@ -20720,7 +20723,7 @@ function 검토PanelContent({
 }) {
   const hasSelection = !!rec;
   const safeRec = useMemo(
-    () => sanitize검토Record(rec) || EMPTY_DETAIL_RECORD,
+    () => sanitizeReviewRecord(rec) || EMPTY_DETAIL_RECORD,
     [rec]
   );
 
@@ -20973,7 +20976,7 @@ function 검토PanelContent({
             <div className="border-t border-slate-800 bg-slate-900/55 px-4 py-4 space-y-3">
               <CtisCompactSignalCard
                 context={ctisContext}
-                onOpenSources={() => set검토Tab("sources")}
+                onOpenSources={() => setReviewTab("sources")}
               />
               <div className="grid gap-3 xl:grid-cols-[1.1fr_0.9fr]">
                 <div className="rounded-2xl border border-slate-700 bg-slate-950/55 p-3">
@@ -21031,7 +21034,7 @@ function 검토PanelContent({
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => set검토Tab("sources")}
+                      onClick={() => setReviewTab("sources")}
                       className="rounded-xl border border-slate-700 bg-slate-800/70 px-3 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-800"
                     >
                       상세 근거 보기
@@ -21096,14 +21099,14 @@ function 검토PanelContent({
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => set검토Tab("sources")}
+                onClick={() => setReviewTab("sources")}
                 className="rounded-xl border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100"
               >
                 근거·출처 탭 열기
               </button>
               <button
                 type="button"
-                onClick={() => set검토Tab("funding")}
+                onClick={() => setReviewTab("funding")}
                 className="rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-sm font-semibold text-sky-200"
               >
                 재원·실행 탭 열기
@@ -21176,7 +21179,7 @@ function 검토PanelContent({
                 </button>
                 <button
                   type="button"
-                  onClick={() => safeInvoke(set검토Tab, "sources")}
+                  onClick={() => safeInvoke(setReviewTab, "sources")}
                   className="flex min-w-0 items-center justify-center rounded-xl border border-slate-600 bg-slate-950 px-3 py-2.5 text-sm font-semibold text-slate-200"
                 >
                   출처 열기
@@ -21198,7 +21201,7 @@ function 검토PanelContent({
             </div>
           </div>
 
-          <검토TabGuideCard
+          <ReviewTabGuideCard
             rec={safeRec}
             detailTab={detailTab}
             strategyMeta={strategyMeta}
@@ -21206,7 +21209,7 @@ function 검토PanelContent({
             localPartners={localPartners}
             pipelineData={pipelineData}
             onDownloadBrief={onDownloadBrief}
-            onOpenSources={() => set검토Tab("sources")}
+            onOpenSources={() => setReviewTab("sources")}
           />
         </div>
       ) : null}
@@ -21230,7 +21233,7 @@ function 검토PanelContent({
             {tabs.map((t) => (
               <button
                 key={t.key}
-                onClick={() => set검토Tab(t.key)}
+                onClick={() => setReviewTab(t.key)}
                 className={cx(
                   isMobile
                     ? "min-h-[44px] rounded-xl px-2 py-2 text-xs font-semibold border transition"
@@ -21262,29 +21265,29 @@ function 검토PanelContent({
 
       {/* Tab content */}
       {detailTab === "overview" && (
-        <검토TabErrorBoundary
+        <ReviewTabErrorBoundary
           resetKey={`overview-${safeRec.id || safeRec.country || "none"}`}
           title="핵심 요약"
         >
           <div className="space-y-3">
             <CtisCompactSignalCard
               context={ctisContext}
-              onOpenSources={() => set검토Tab("sources")}
+              onOpenSources={() => setReviewTab("sources")}
             />
             <ConnectionReadinessCard
               rec={safeRec}
               liveData={liveData}
               pipelineData={pipelineData}
               geoData={geoData}
-              onOpenSources={() => set검토Tab("sources")}
-              onOpenFunding={() => set검토Tab("funding")}
+              onOpenSources={() => setReviewTab("sources")}
+              onOpenFunding={() => setReviewTab("funding")}
             />
             <DataBasedEvidenceCard rec={safeRec} pipelineData={pipelineData} />
             <CandidateDecisionWorkspaceCard
               rec={safeRec}
               pipelineData={pipelineData}
               onDownloadBrief={onDownloadBrief}
-              onOpenSources={() => set검토Tab("sources")}
+              onOpenSources={() => setReviewTab("sources")}
               filteredRecs={filteredRecs}
               onSelectRec={onSelectRec}
             />
@@ -21416,7 +21419,7 @@ function 검토PanelContent({
             <div className="grid gap-3 xl:grid-cols-2">
               <StrategyEvidenceCard
                 rec={safeRec}
-                onOpenSources={() => set검토Tab("sources")}
+                onOpenSources={() => setReviewTab("sources")}
                 onOpenDrillDown={onOpenDrillDown}
               />
               <ExecutionFeasibilityCard rec={safeRec} />
@@ -21517,11 +21520,11 @@ function 검토PanelContent({
               </ol>
             </SectionCard>
           </div>
-        </검토TabErrorBoundary>
+        </ReviewTabErrorBoundary>
       )}
 
       {detailTab === "recommendations" && strategySynthesis && (
-        <검토TabErrorBoundary
+        <ReviewTabErrorBoundary
           resetKey={`recommendations-${
             safeRec.id || safeRec.country || "none"
           }`}
@@ -21538,7 +21541,7 @@ function 검토PanelContent({
               icon={<Target className="text-emerald-400" size={16} />}
               right={
                 <span className="text-xs text-slate-400">
-                  검토표 저장는 아래 버튼에서 바로 할 수 있습니다
+                  검토표는 아래 버튼에서 바로 저장 가능
                 </span>
               }
             >
@@ -21867,11 +21870,11 @@ function 검토PanelContent({
               </div>
             </SectionCard>
           </div>
-        </검토TabErrorBoundary>
+        </ReviewTabErrorBoundary>
       )}
 
       {detailTab === "funding" && (
-        <검토TabErrorBoundary
+        <ReviewTabErrorBoundary
           resetKey={`funding-${safeRec.id || safeRec.country || "none"}`}
           title="재원·실행"
         >
@@ -21887,11 +21890,11 @@ function 검토PanelContent({
             onRefreshGeoData={onRefreshGeoData}
             onRefreshPipelineData={onRefreshPipelineData}
           />
-        </검토TabErrorBoundary>
+        </ReviewTabErrorBoundary>
       )}
 
       {detailTab === "sources" && (
-        <검토TabErrorBoundary
+        <ReviewTabErrorBoundary
           resetKey={`sources-${safeRec.id || safeRec.country || "none"}`}
           title="공식 근거와 출처"
         >
@@ -22287,11 +22290,11 @@ function 검토PanelContent({
               )}
             </div>
           </SectionCard>
-        </검토TabErrorBoundary>
+        </ReviewTabErrorBoundary>
       )}
 
       {detailTab === "partners" && (
-        <검토TabErrorBoundary
+        <ReviewTabErrorBoundary
           resetKey={`partners-${safeRec.id || safeRec.country || "none"}`}
           title="현지 파트너"
         >
@@ -22374,7 +22377,7 @@ function 검토PanelContent({
               </div>
             </SectionCard>
           </div>
-        </검토TabErrorBoundary>
+        </ReviewTabErrorBoundary>
       )}
 
       {/* sticky actions */}
@@ -22404,7 +22407,7 @@ function 검토PanelContent({
           </button>
         </div>
         <div className="mt-2 text-[11px] text-slate-400">
-          검토표와 요약본은 바로 저장할 수 있습니다.
+          검토표와 요약본은 저장 가능합니다.
         </div>
       </div>
     </div>
@@ -22416,7 +22419,7 @@ function MobileBottomNav({
   onOpenLegend,
   onOpenFilters,
   onOpenCandidates,
-  onOpen검토,
+  onOpenReview,
   filteredCount = 0,
   hasActiveRec = false,
 }) {
@@ -22440,7 +22443,7 @@ function MobileBottomNav({
       key: "detail",
       label: "상세",
       icon: PanelRight,
-      onClick: onOpen검토,
+      onClick: onOpenReview,
       disabled: !hasActiveRec,
     },
   ];
@@ -22931,7 +22934,7 @@ function LaunchReadinessModal({
             </div>
             <div className="mt-1 text-sm text-slate-400">
               선택한 후보를 외부에 공유하기 전에 핵심 근거, 파트너, 재원 연결
-              여부를 빠르게 점검하고 바로 저장할 수 있습니다.
+              여부를 빠르게 점검하고 저장 가능합니다.
             </div>
           </div>
           <button
@@ -23202,7 +23205,7 @@ function buildRecommendationWorkbook(
   pipelineData = null,
   filters = null
 ) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   if (!rec) return null;
   const XLSX = typeof window !== "undefined" ? window.XLSX : null;
@@ -23503,7 +23506,7 @@ function buildRecommendationPreviewText(
   pipelineData = null,
   filters = null
 ) {
-  const safeRec = sanitize검토Record(rec) || rec || {};
+  const safeRec = sanitizeReviewRecord(rec) || rec || {};
   const generatedAt = new Date().toLocaleString("ko-KR", {
     year: "numeric",
     month: "2-digit",
@@ -23562,7 +23565,7 @@ function createRecommendationExcelPayload(
   pipelineData = null,
   filters = null
 ) {
-  const safeRec = sanitize검토Record(rec) ||
+  const safeRec = sanitizeReviewRecord(rec) ||
     rec || { country: "", region: "", tech: "" };
   const workbookBundle = buildRecommendationWorkbook(
     safeRec,
@@ -23711,7 +23714,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
   const firstValueTrackedRef = useRef(false);
   const completedScenarioKeyRef = useRef("");
 
-  const [detailTab, set검토Tab] = useState("overview");
+  const [detailTab, setReviewTab] = useState("overview");
   const [focusMode, setFocusMode] = useState("region"); // country | region
   const [mapMode, setMapMode] = useState("hybrid"); // satellite | hybrid
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
@@ -23817,7 +23820,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
       country: urlState.country || prev.country,
       purpose: urlState.purpose || prev.purpose,
     }));
-    if (urlState.tab) set검토Tab(urlState.tab);
+    if (urlState.tab) setReviewTab(urlState.tab);
     if (urlState.focus) setFocusMode(urlState.focus);
     if (urlState.rec) {
       const found = NORMALIZED_ENHANCED_RECOMMENDATIONS.find(
@@ -23841,7 +23844,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
 
       setActiveScenarioKey(resolvedPresetKey);
       setFilters(nextFilters);
-      set검토Tab(preset.detailTab || "overview");
+      setReviewTab(preset.detailTab || "overview");
       setFocusMode(preset.focusMode || "region");
       setLeftPanelTab(preset.leftPanelTab || "candidates");
       setLeftPanelOpen(true);
@@ -24024,13 +24027,13 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
           `purpose 필터 불일치: expected=${expectPurpose}, actual=${actualFilters.purpose}`
         );
 
-      const actual검토Tab = detailTabRef.current;
+      const actualReviewTab = detailTabRef.current;
       const actualLeftTab = leftPanelTabRef.current;
       const actualFocus = focusModeRef.current;
 
-      if (preset?.detailTab && actual검토Tab !== preset.detailTab)
+      if (preset?.detailTab && actualReviewTab !== preset.detailTab)
         problems.push(
-          `detailTab 불일치: expected=${preset.detailTab}, actual=${actual검토Tab}`
+          `detailTab 불일치: expected=${preset.detailTab}, actual=${actualReviewTab}`
         );
       if (preset?.leftPanelTab && actualLeftTab !== preset.leftPanelTab)
         problems.push(
@@ -24083,7 +24086,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
         pass: problems.length === 0,
         problems,
         actual: {
-          detailTab: actual검토Tab,
+          detailTab: actualReviewTab,
           leftPanelTab: actualLeftTab,
           focusMode: actualFocus,
           tech: actualFilters.tech,
@@ -24104,7 +24107,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
       original.workflowActionState || { ...SCENARIO_ACTION_TRACKER_INITIAL }
     );
     if (original.filters) setFilters(original.filters);
-    if (original.detailTab) set검토Tab(original.detailTab);
+    if (original.detailTab) setReviewTab(original.detailTab);
     if (original.leftPanelTab) setLeftPanelTab(original.leftPanelTab);
     if (typeof original.leftPanelOpen === "boolean")
       setLeftPanelOpen(original.leftPanelOpen);
@@ -24520,7 +24523,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
       if (typeof window !== "undefined") {
         window.requestAnimationFrame(() => {
           window.requestAnimationFrame(() => {
-            if (snapshot?.detailTab) set검토Tab(snapshot.detailTab);
+            if (snapshot?.detailTab) setReviewTab(snapshot.detailTab);
             if (snapshot?.focusMode) setFocusMode(snapshot.focusMode);
             if (snapshot?.leftPanelTab) setLeftPanelTab(snapshot.leftPanelTab);
             setLeftPanelOpen(true);
@@ -24719,7 +24722,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
       counts,
       sections,
       summary: activeRec
-        ? `${activeRec.country} · ${activeRec.region}의 ${activeRec.tech} 협력안은 초기 발굴·사전기획·내부 검토자료 용도로 바로 활용할 수 있습니다.`
+        ? `${activeRec.country} · ${activeRec.region}의 ${activeRec.tech} 협력안은 초기 발굴·사전기획·내부 검토자료 용도로 활용 가능합니다.`
         : "후보를 선택하면 공유, 저장, 요약본 정리를 바로 시작할 수 있습니다.",
     };
   }, [activeRec]);
@@ -25015,7 +25018,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
       setLeftPanelOpen(true);
       setRightPanelOpen(true);
       setLeftPanelTab("filters");
-      set검토Tab(
+      setReviewTab(
         workflow?.preset?.detailTab ||
           STRATEGY_PRESETS?.[resolvedPresetKey]?.detailTab ||
           "recommendations"
@@ -25371,7 +25374,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
     }
     if (actionKey === "jump-sources") {
       setRightPanelOpen(true);
-      set검토Tab("sources");
+      setReviewTab("sources");
       if (isMobile) setMobilePanel("detail");
     }
 
@@ -25404,27 +25407,27 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
           break;
         case "go-overview":
           setRightPanelOpen(true);
-          set검토Tab("overview");
+          setReviewTab("overview");
           if (isMobile) setMobilePanel("detail");
           break;
         case "go-recommendations":
           setRightPanelOpen(true);
-          set검토Tab("overview");
+          setReviewTab("overview");
           if (isMobile) setMobilePanel("detail");
           break;
         case "go-funding":
           setRightPanelOpen(true);
-          set검토Tab("funding");
+          setReviewTab("funding");
           if (isMobile) setMobilePanel("detail");
           break;
         case "go-partners":
           setRightPanelOpen(true);
-          set검토Tab("partners");
+          setReviewTab("partners");
           if (isMobile) setMobilePanel("detail");
           break;
         case "go-sources":
           setRightPanelOpen(true);
-          set검토Tab("sources");
+          setReviewTab("sources");
           if (isMobile) setMobilePanel("detail");
           break;
         case "go-country":
@@ -25580,7 +25583,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
         onSelectRec={(rec) => {
           setActiveRec(rec);
           setFocusMode("region");
-          set검토Tab("overview");
+          setReviewTab("overview");
           if (isMobile) setMobileQuickOpen(false);
         }}
         mapMode={mapMode}
@@ -25618,7 +25621,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
             setLeftPanelOpen(true);
             setRightPanelOpen(true);
             setLeftPanelTab("candidates");
-            set검토Tab("overview");
+            setReviewTab("overview");
           }}
         />
       )}
@@ -25808,7 +25811,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
               onClick={() => {
                 if (!activeRec) return;
                 setRightPanelOpen(true);
-                set검토Tab("overview");
+                setReviewTab("overview");
               }}
               className={cx(
                 "rounded-xl border px-3 py-2 font-semibold",
@@ -25843,7 +25846,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                   onDragStart={(event) => beginPanelDrag("left", event)}
                   onCollapse={() => setLeftPanelOpen(false)}
                 >
-                  <Desktop탐색Panel
+                  <DesktopBrowsePanel
                     leftPanelTab={leftPanelTab}
                     setLeftPanelTab={setLeftPanelTab}
                     filters={filters}
@@ -25855,7 +25858,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                     onSelectRec={(rec) => {
                       setActiveRec(rec);
                       setFocusMode("region");
-                      set검토Tab("overview");
+                      setReviewTab("overview");
                       setRightPanelOpen(true);
                     }}
                     guidePulse={currentGuideTarget}
@@ -25927,10 +25930,10 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                         "guide-pulse-soft rounded-2xl"
                     )}
                   >
-                    <검토PanelContent
+                    <ReviewPanelContent
                       rec={activeRec}
                       detailTab={detailTab}
-                      set검토Tab={set검토Tab}
+                      setReviewTab={setReviewTab}
                       onCountryFocus={() => setFocusMode("country")}
                       onRegionFocus={() => setFocusMode("region")}
                       guidePulse={currentGuideTarget}
@@ -25961,7 +25964,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                         if (!nextRec) return;
                         setActiveRec(nextRec);
                         setFocusMode("region");
-                        set검토Tab("overview");
+                        setReviewTab("overview");
                       }}
                       onOpenDrillDown={(item) => {
                         setDrillDownItem(item);
@@ -26057,7 +26060,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                   <button
                     type="button"
                     onClick={() => {
-                      set검토Tab("overview");
+                      setReviewTab("overview");
                       setMobilePanel("detail");
                     }}
                     className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-2 text-[11px] font-semibold text-emerald-200"
@@ -26067,7 +26070,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                   <button
                     type="button"
                     onClick={() => {
-                      set검토Tab("funding");
+                      setReviewTab("funding");
                       setMobilePanel("detail");
                     }}
                     className="rounded-xl border border-slate-700 bg-slate-950/55 px-2.5 py-2 text-[11px] font-semibold text-slate-100"
@@ -26077,7 +26080,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                   <button
                     type="button"
                     onClick={() => {
-                      set검토Tab("sources");
+                      setReviewTab("sources");
                       setMobilePanel("detail");
                     }}
                     className="rounded-xl border border-slate-700 bg-slate-950/55 px-2.5 py-2 text-[11px] font-semibold text-slate-100"
@@ -26210,7 +26213,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
           onOpenLegend={() => setMobilePanel("legend")}
           onOpenFilters={() => setMobilePanel("filters")}
           onOpenCandidates={() => setMobilePanel("candidates")}
-          onOpen검토={() => activeRec && setMobilePanel("detail")}
+          onOpenReview={() => activeRec && setMobilePanel("detail")}
         />
       )}
 
@@ -26244,7 +26247,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
                   tech: nextTech,
                 }));
                 setLeftPanelTab("candidates");
-                set검토Tab("overview");
+                setReviewTab("overview");
                 setMobilePanel("candidates");
                 setMobileQuickOpen(false);
               }}
@@ -26283,9 +26286,9 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
               onSelectRec={(rec) => {
                 setActiveRec(rec);
                 setFocusMode("region");
-                set검토Tab("overview");
+                setReviewTab("overview");
               }}
-              onOpen검토={() => setMobilePanel("detail")}
+              onOpenReview={() => setMobilePanel("detail")}
               isMobile
               guidePulse={currentGuideTarget}
               strategyMetaByRec={strategyMetaByRec}
@@ -26312,10 +26315,10 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
               compact
             />
             <div className="h-3" />
-            <검토PanelContent
+            <ReviewPanelContent
               rec={activeRec}
               detailTab={detailTab}
-              set검토Tab={set검토Tab}
+              setReviewTab={setReviewTab}
               onCountryFocus={() => setFocusMode("country")}
               onRegionFocus={() => setFocusMode("region")}
               onDownloadExcel={handleDownloadExcel}
@@ -26337,7 +26340,7 @@ function AppShell({ ctisDataset = CTIS_VISIBLE_SEED_DATA }) {
               onSelectRec={(nextRec) => {
                 if (!nextRec) return;
                 setActiveRec(nextRec);
-                set검토Tab("overview");
+                setReviewTab("overview");
                 setMobilePanel("detail");
               }}
               onRefreshLiveData={() =>
@@ -27461,7 +27464,11 @@ async function fetchCtisPublicDataset(path) {
       return null;
     }
     if (!contentType.includes("json")) {
-      console.warn("CTIS bootstrap path returned unexpected content-type:", path, contentType);
+      console.warn(
+        "CTIS bootstrap path returned unexpected content-type:",
+        path,
+        contentType
+      );
       return null;
     }
 

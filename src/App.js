@@ -4645,7 +4645,7 @@ function makeRec({
     },
     "탄소 포집 및 저장 (CCUS)": {
       layer: "기술·역량",
-      field: "배출원 지도, 농도, 저장소 후보지, 규제·모니터링 체계",
+      field: "배출원 지도, 농도, 저장소 대상지, 규제·모니터링 체계",
       format: "Table + Geo",
       unit: "tCO2, %vol",
       usage: "국제감축 / 사업화",
@@ -4747,7 +4747,7 @@ function makeRec({
 
   const actions = [
     `${country} 국가 NDC/정책 문서 메타데이터 구조화`,
-    `${region} 지역 단위 실증/사업 후보지 검증`,
+    `${region} 지역 단위 실증/사업 대상지 검증`,
     `${tech} 관련 규정·인허가·조달 점검`,
   ];
 
@@ -8228,7 +8228,7 @@ const STRATEGY_PRESETS = {
   },
   "adaptation-screening": {
     key: "adaptation-screening",
-    label: "적응 협력 후보 찾기",
+    label: "적응 협력 대상 선별",
     tech: "기후변화 감시 및 진단 기술",
     purpose: "ODA",
     minCoverage: 80,
@@ -8239,7 +8239,7 @@ const STRATEGY_PRESETS = {
   },
   "energy-rnd": {
     key: "energy-rnd",
-    label: "에너지 실증 후보 찾기",
+    label: "에너지 실증 대상 선별",
     purpose: "R&D 실증",
     strategyFocus: "실행우선",
     minCoverage: 70,
@@ -8340,10 +8340,10 @@ const PLATFORM_USAGE_SCENARIOS = [
     key: "energy-rnd",
     tone: "amber",
     audience: "실증·연구기획 담당자",
-    title: "실증·R&D 후보지 찾기",
+    title: "실증·R&D 대상지 탐색",
     summary:
-      "재생에너지·전력 분야에서 실증 가능성과 재원 신호가 동시에 있는 후보지를 빠르게 찾습니다.",
-    output: "실증 후보지 요약본",
+      "재생에너지·전력 분야에서 실증 가능성과 재원 연계 근거가 확인되는 대상지를 선별합니다.",
+    output: "실증 대상지 요약본",
     highlights: ["R&D 실증", "재원·실행", "파이프라인"],
   },
   {
@@ -8370,7 +8370,7 @@ const PLATFORM_USAGE_SCENARIOS = [
     key: "evidence-review",
     tone: "blue",
     audience: "검토·검증 담당자",
-    title: "근거자료와 출처 빠르게 검토",
+    title: "근거자료와 출처 검토",
     summary:
       "정책 문서, 데이터 소스, 지역 단위 근거가 무엇인지 확인해 검토 신뢰도를 높입니다.",
     output: "근거 검토 메모",
@@ -8384,13 +8384,13 @@ const ROLE_BASED_WORKFLOWS = [
     preset: "overview",
     tone: "slate",
     label: "처음 둘러보기",
-    title: "플랫폼 구조 빠르게 익히기",
+    title: "플랫폼 구조 익히기",
     summary:
       "기본 후보 찾기 목록을 먼저 확인하고, 상세 패널에서 근거 자료까지 짧게 훑어봅니다.",
     steps: ["후보 1개 열기", "핵심 요약 탭 확인", "공식 근거 확인"],
     cta: "기본 화면 열기",
     result: "기본 검토 흐름 이해",
-    when: "처음 접속했거나 구조를 빠르게 확인하고 싶을 때",
+    when: "처음 접속했거나 구조를 확인하고 싶을 때",
   },
   {
     key: "oda",
@@ -8415,7 +8415,7 @@ const ROLE_BASED_WORKFLOWS = [
       "재생에너지·전력 분야의 실증 및 재원 연계가 가능한 대상을 탐색합니다.",
     steps: ["실증 목적 적용", "재원·실행 탭 확인", "협력 대상 검토표 PDF 준비"],
     cta: "실증 후보",
-    result: "실증 후보지 요약본",
+    result: "실증 대상지 요약본",
     when: "기술 실증, 연구기획, 확산 후보를 검토할 때",
   },
   {
@@ -8457,8 +8457,8 @@ const SCENARIO_WORKFLOWS = {
   overview: {
     key: "overview",
     audience: "처음 접속한 사용자",
-    title: "플랫폼 구조 빠르게 익히기",
-    when: "플랫폼 첫 진입 시 지도·후보·상세 패널이 어떻게 연결되는지 빠르게 확인할 때 사용합니다.",
+    title: "플랫폼 구조 익히기",
+    when: "플랫폼 첫 진입 시 지도·후보·상세 패널이 어떻게 연결되는지 확인할 때 사용합니다.",
     deliverable: "기본 검토 메모",
     pilotNote:
       "대표 예시는 베트남 메콩델타 데이터입니다. 국가 전용 화면이 아니라 확장 가능한 전략지도 구조를 먼저 익히는 흐름입니다.",
@@ -8528,7 +8528,7 @@ const SCENARIO_WORKFLOWS = {
     when: "대상을 3~5개로 선별하여 내부 검토용 초안을 작성할 때 활용합니다.",
     deliverable: "우선협력 후보",
     pilotNote:
-      "현재는 베트남 메콩델타 대표 데이터가 가장 풍부하게 연결되어 있어 전체 구조를 빠르게 확인하기 좋습니다.",
+      "현재는 베트남 메콩델타 대표 데이터가 가장 풍부하게 연결되어 있어 전체 구조 확인에 적합합니다.",
     preset: STRATEGY_PRESETS["oda-screening"],
     steps: [
       {
@@ -8678,9 +8678,9 @@ const SCENARIO_WORKFLOWS = {
   "energy-rnd": {
     key: "energy-rnd",
     audience: "실증·연구기획 담당자",
-    title: "실증·R&D 후보지 찾기",
-    when: "재생에너지·전력 분야에서 실증 가능성과 재원 신호를 동시에 살펴볼 때 사용합니다.",
-    deliverable: "실증 후보지 요약본",
+    title: "실증·R&D 대상지 탐색",
+    when: "재생에너지·전력 분야에서 실증 가능성과 재원 연계를 함께 살펴볼 때 사용합니다.",
+    deliverable: "실증 대상지 요약본",
     preset: STRATEGY_PRESETS["energy-rnd"],
     steps: [
       {
@@ -8696,7 +8696,7 @@ const SCENARIO_WORKFLOWS = {
       {
         key: "review-region",
         label: "지역 후보 확인",
-        detail: "지역 시점으로 내려가 실증 후보지를 확인합니다.",
+        detail: "지역 시점으로 내려가 실증 대상지를 확인합니다.",
         question: "실증 가능성이 높은 지역은 어디인가?",
         actionKey: "go-region",
         actionLabel: "지역 보기",
@@ -8707,7 +8707,7 @@ const SCENARIO_WORKFLOWS = {
         key: "review-funding",
         label: "재원·실행 검토",
         detail: "재원·실행 탭에서 파이프라인과 재원을 확인합니다.",
-        question: "재원 신호와 실행 가능성이 있는가?",
+        question: "재원 연계와 실행 가능성이 있는가?",
         actionKey: "go-funding",
         actionLabel: "재원·실행 탭 열기",
         guideKey: "toolbar-detail",
@@ -8736,11 +8736,11 @@ const SCENARIO_WORKFLOWS = {
       },
     ],
     completion: {
-      headline: "실증·R&D 후보지 검토가 완료되었습니다.",
-      summary: "후보지, 재원·실행, 파트너, 다운로드 산출물이 정리되었습니다.",
+      headline: "실증·R&D 대상지 검토가 완료되었습니다.",
+      summary: "대상지, 재원·실행, 파트너, 다운로드 산출물이 정리되었습니다.",
       outputs: [
-        "실증 후보지 1차 검토",
-        "재원·실행 신호 확인",
+        "실증 대상지 1차 검토",
+        "재원·실행 연계 확인",
         "검토표 PDF/요약본 준비",
       ],
       actions: [
@@ -8886,8 +8886,8 @@ const SCENARIO_WORKFLOWS = {
   "evidence-review": {
     key: "evidence-review",
     audience: "검토·검증 담당자",
-    title: "근거자료와 출처 빠르게 검토",
-    when: "정책 문서, 데이터 소스, 지역 단위 근거를 빠르게 검증해야 할 때 사용합니다.",
+    title: "근거자료와 출처 검토",
+    when: "정책 문서, 데이터 소스, 지역 단위 근거를 검증해야 할 때 사용합니다.",
     deliverable: "근거 검토 메모",
     preset: STRATEGY_PRESETS["evidence-review"],
     steps: [
@@ -9546,7 +9546,7 @@ function buildStrategySynthesis(rec, pipelineData = null) {
         period: "5-12개월",
         outcome: "제안서/실증/사업화 착수",
         actions: [
-          "우선 후보지·기관 협약",
+          "우선 대상지·기관 협약",
           "재원 제안서 또는 사업 목적 적합도 문서 작성",
           "KPI 및 데이터 업데이트 체계 수립",
         ],
@@ -10616,7 +10616,7 @@ const GUIDE_STEPS = [
     key: "focus-buttons",
     title: "국가·지역 시점을 빠르게 전환하기",
     desc: "상세 패널의 ‘국가 검토 기준 보기 / 지역 검토 기준 보기’를 활용해 의사결정 수준을 바꿉니다.",
-    example: "국가 레벨 협력 검토 → 지역 레벨 실증 후보지 확인",
+    example: "국가 레벨 협력 검토 → 지역 레벨 실증 대상지 확인",
     actionKey: "focus-country",
     actionLabel: "국가 검토 기준 보기 체험",
   },
@@ -14757,7 +14757,7 @@ function buildSourceIntegrityRows(
     },
     {
       key: "pipeline",
-      label: "프로젝트·재원 신호",
+      label: "프로젝트·재원 근거",
       status: pipelineData?.projects?.length
         ? `${pipelineData.projects.length}건`
         : pipelineData?.isFallback
@@ -14854,15 +14854,15 @@ function buildDecisionEvidenceRows(
   );
   verify.push(
     pipelineData?.projects?.length
-      ? `프로젝트·재원 신호 ${pipelineData.projects.length}건`
+      ? `프로젝트·재원 근거 ${pipelineData.projects.length}건`
       : pipelineData?.isFallback
       ? "프로젝트·재원은 기본 제공 링크 중심"
-      : "프로젝트·재원 신호 추가 확인 필요"
+      : "프로젝트·재원 근거 추가 확인 필요"
   );
 
   if (!geoData?.countryFeature) gaps.push("국가 경계 검증 필요");
   if (geoData?.countryFeature && !geoData?.regionFeature)
-    gaps.push("지역 경계 또는 후보지 좌표 보강 필요");
+    gaps.push("지역 경계 또는 대상지 좌표 보강 필요");
   if (missingRows.length)
     gaps.push(`결측·보완 필요 항목 ${missingRows.length}건`);
   if (!evidenceLinks.length)
@@ -15507,7 +15507,7 @@ function DataBasedEvidenceCard({ rec, pipelineData = null }) {
         <li className="flex gap-2">
           <CheckCircle2 size={16} className="mt-0.5 text-emerald-300" />
           <span>
-            지도 좌표, 지역 설명, 프로젝트·재원 신호를 한 화면에서 연결해
+            지도 좌표, 지역 설명, 프로젝트·재원 근거를 한 화면에서 연결해
             의사결정 시간을 줄일 수 있습니다.
           </span>
         </li>
@@ -15898,7 +15898,7 @@ function buildCandidateActivationReasons(rec, strategyMeta = {}) {
     safeArray(safeRec?.regionRows).length;
   if (sourceCount >= 4) reasons.push(`공식·근거 문서 ${sourceCount}건`);
   if (Number(strategyMeta?.pipelineProjectCount || 0) > 0)
-    reasons.push(`프로젝트·재원 신호 ${strategyMeta.pipelineProjectCount}건`);
+    reasons.push(`프로젝트·재원 근거 ${strategyMeta.pipelineProjectCount}건`);
   if (safeArray(safeRec?.localPartners).length > 0)
     reasons.push(`파트너 ${safeArray(safeRec?.localPartners).length}개`);
   if (!reasons.length) reasons.push("목적 적합성 기준 우선 검토 후보");
@@ -18374,7 +18374,7 @@ function buildMetricDefinitionRows(rec, pipelineData = null) {
     {
       metric: METRIC_FRAMEWORK.coverage.label,
       definition: METRIC_FRAMEWORK.coverage.definition,
-      basis: `${evidenceMetrics.sourceCount}개 근거 항목 · ${evidenceMetrics.regionFactCount}개 지역·프로젝트 신호 · 결측 ${evidenceMetrics.missingCount}건`,
+      basis: `${evidenceMetrics.sourceCount}개 근거 항목 · ${evidenceMetrics.regionFactCount}개 지역·프로젝트 연계 정보 · 결측 ${evidenceMetrics.missingCount}건`,
     },
     {
       metric: METRIC_FRAMEWORK.reliability.label,
@@ -18793,7 +18793,7 @@ function buildInternationalFrameworkRows(rec, pipelineData = null) {
       note: "Country Programme과 Readiness는 국가 우선순위와 프로젝트 파이프라인을 연결하는 핵심 단계입니다.",
       action: "국가 프로그램 연계 concept note 메모",
       platformUse:
-        "재원·실행 탭의 프로젝트·재원 신호를 concept note 전단계 자료로 사용",
+        "재원·실행 탭의 프로젝트·재원 근거를 concept note 전단계 자료로 사용",
       href: INTERNATIONAL_COOP_REFERENCE_SHELF[3].href,
       hrefLabel: "Country Programme",
       secondaryHref: INTERNATIONAL_COOP_REFERENCE_SHELF[2].href,
